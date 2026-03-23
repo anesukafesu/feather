@@ -1,0 +1,80 @@
+{
+  "tables": {
+    "books": {
+      "primaryKey": "id",
+      "columns": {
+        "id": {
+          "type": "INTEGER",
+          "unique": true,
+          "isNullable": false,
+          "default": {
+            "scheme": "autoIncrement",
+            "context": {
+              "nextValue": 2
+            }
+          }
+        },
+        "title": {
+          "type": "TEXT",
+          "unique": true,
+          "isNullable": false,
+          "shouldAutoIncrement": false,
+          "default": {
+            "scheme": "useNull"
+          }
+        },
+        "year": {
+          "type": "TEXT",
+          "unique": false,
+          "shouldAutoIncrement": false,
+          "isNullable": false,
+          "default": {
+            "scheme": "useNull"
+          }
+        },
+        "author": {
+          "type": "TEXT",
+          "unique": false,
+          "shouldAutoIncrement": false,
+          "isNullable": false,
+          "default": {
+            "scheme": "useNull"
+          }
+        },
+        "rating": {
+          "type": "FLOAT",
+          "unique": false,
+          "shouldAutoIncrement": false,
+          "isNullable": true,
+          "default": {
+            "scheme": "useNull"
+          }
+        }
+      },
+      "indexes": {
+        "title": {
+          "The Adventures of Huckleberry Finn": 1,
+          "The Adventures of Tom Sawyer": 2
+        }
+      },
+      "autoIncrementContext": {
+        "id": 3
+      },
+      "rows": {
+        "1": {
+          "name": "The Adventures of Huckleberry Finn",
+          "year": 1884,
+          "author": "Mark Twain",
+          "rating": null
+        },
+
+        "2": {
+          "name": "The Adventures of Tom Sawyer",
+          "year": 1876,
+          "author": "Mark Twain",
+          "rating": 0.0
+        }
+      }
+    }
+  }
+}
