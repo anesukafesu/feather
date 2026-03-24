@@ -85,11 +85,12 @@ export interface SetOperation {
 
 export interface AddColumnAlteration {
   type: "AddColumn";
+  columnName: Identifier;
   column: Column;
 }
 
 export interface DropColumnAlteration {
-  type: "DeleteColumn";
+  type: "DropColumn";
   columnName: Identifier;
 }
 
