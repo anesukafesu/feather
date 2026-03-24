@@ -26,18 +26,10 @@ export interface IODevice {
   displayTable(table: string[][], title?: string): void;
 }
 
-function executeStatements(
-  program: ProgramAST,
-  dataset: Dataset,
-  ioDevice: IODevice,
-) {
+export function executeStatements(program: ProgramAST, dataset: Dataset) {
   let executionSignal: ExecutionSignal = { type: "Null" };
 
   for (const statement of program.statements) {
-    if (executionSignal.type !== "Null") {
-      // Handle the execution signal
-    }
-
     switch (statement.type) {
       case "CreateTableStatement":
         executionSignal = createTable(statement, dataset);
@@ -51,6 +43,10 @@ function executeStatements(
       case "SelectRowsStatement":
       case "UpdateRowsStatement":
       case "DeleteRowsStatement":
+    }
+
+    if (executionSignal.type !== "Null") {
+      console.log(executionSignal);
     }
   }
 }
