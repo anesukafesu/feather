@@ -4,7 +4,7 @@
   "description": "Feather is a lightweight, in-memory, relational database. It uses an SQL-like query language Feather Query Language, (FQL for short, pronounced fickle).",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsx test/test.ts"
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/anesukafesu/feather/issues"
   },
-  "homepage": "https://github.com/anesukafesu/feather#readme"
+  "homepage": "https://github.com/anesukafesu/feather#readme",
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
 }
