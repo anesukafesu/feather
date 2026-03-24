@@ -25,7 +25,7 @@ I plan on building the database engine in TypeScript.
 
 <alter-table-statement> := ALTER TABLE <identifier> <table-alteration>;
 
-<insert-row-statement> := INSERT INTO <table-name> (<column-name-list>) VALUES (<values-list>);
+<insert-row-statement> := INSERT INTO <table-name> (<column-name-list>) VALUES (<literals-list>);
 
 <select-rows-statement> := SELECT * | <column-list>  FROM <table-name> <where-clause>?;
 
@@ -49,9 +49,9 @@ I plan on building the database engine in TypeScript.
 
 <column-name-list> := <identifier> [, <identifier>]*;
 
-<values-list> := <value> [, <value>]*
+<literal-list> := <literal> [, <literal>]*
 
-<value> := <text> | <number> | <boolean> | <null>;
+<literal> := <text> | <number> | <boolean> | <null>;
 
 <text> := '.*' | ".*"
 
@@ -65,13 +65,13 @@ I plan on building the database engine in TypeScript.
 
 <set-operation> := SET <column-name> = <value>;
 
-<where-clause> := WHERE <column-relational-operator> [<logical-operator> <column-relational-operator>]*;
+<where-clause> := WHERE <column-relational-expression>;
+
+<column-relational-expression> := <identifier> <column-relational-operator> <literal>
 
 <column-relational-operator> := <column-name> <relational-operator> <value>;
 
 <relational-operator> := < = | != | > | < | >= | <= | LIKE >
-
-<logical-operator> := AND | OR
 
 ```
 

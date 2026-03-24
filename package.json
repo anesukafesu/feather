@@ -1,0 +1,21 @@
+{
+  "name": "feather",
+  "version": "1.0.0",
+  "description": "Feather is a lightweight, in-memory, relational database. It uses an SQL-like query language Feather Query Language, (FQL for short, pronounced fickle).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anesukafesu/feather.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/anesukafesu/feather/issues"
+  },
+  "homepage": "https://github.com/anesukafesu/feather#readme"
+}

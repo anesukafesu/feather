@@ -18,7 +18,6 @@
           "type": "TEXT",
           "unique": true,
           "isNullable": false,
-          "shouldAutoIncrement": false,
           "default": {
             "scheme": "useNull"
           }
@@ -26,7 +25,6 @@
         "year": {
           "type": "TEXT",
           "unique": false,
-          "shouldAutoIncrement": false,
           "isNullable": false,
           "default": {
             "scheme": "useNull"
@@ -35,7 +33,6 @@
         "author": {
           "type": "TEXT",
           "unique": false,
-          "shouldAutoIncrement": false,
           "isNullable": false,
           "default": {
             "scheme": "useNull"
@@ -56,9 +53,6 @@
           "The Adventures of Huckleberry Finn": 1,
           "The Adventures of Tom Sawyer": 2
         }
-      },
-      "autoIncrementContext": {
-        "id": 3
       },
       "rows": {
         "1": {
