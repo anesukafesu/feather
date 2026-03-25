@@ -1,6 +1,6 @@
 {
   "name": "feather",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Feather is a lightweight, in-memory, relational database. It uses an SQL-like query language Feather Query Language, (FQL for short, pronounced fickle).",
   "type": "module",
   "main": "index.js",
