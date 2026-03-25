@@ -4,7 +4,11 @@ import type {
   SelectRowsStatement,
   WhereClause,
 } from "@contracts/ast.js";
-import type { DatasetDataType } from "@contracts/common.js";
+import type {
+  Column,
+  DatasetDataType,
+  DatasetValueType,
+} from "@contracts/common.js";
 import type { Dataset, RowData } from "@contracts/dataset.js";
 import type { ExecutionSignal } from "@executor/executor.js";
 
@@ -15,15 +19,22 @@ export function selectRows(
   const tableName = statement.tableName;
   const table = dataset.tables[tableName];
 
+  if (!table) {
+    return {
+      type: "Error",
+      message: `The table ${statement.tableName} does not exist`,
+    };
+  }
+
   // Filter the rows that meet the condition.
   let filteredRows = statement.where
-    ? filterRows(table.rows, statement.where)
+    ? filterRows(table.rows, table.columns, statement.where)
     : table.rows;
 
   // Get the columns that the user requested only.
   const filteredRowsAndColumns =
     statement.columnNames === "*"
-      ? filterRows
+      ? filteredRows
       : filterColumns(filteredRows, statement.columnNames);
 
   // Format them for displaying
@@ -42,7 +53,7 @@ function filterColumns(
   rows: Record<string, RowData>,
   columnNames: Identifier[],
 ) {
-  const rowsWithSelectedColumns: Record<string | number, RowData> = {};
+  const rowsWithSelectedColumns: Record<string, RowData> = {};
   const columnNamesLookup = new Set(columnNames);
 
   for (const [primaryKey, rowData] of Object.entries(rows)) {
@@ -60,13 +71,34 @@ function filterColumns(
   return rowsWithSelectedColumns;
 }
 
-function filterRows(rows: Record<string, RowData>, where: WhereClause) {
+/**
+ * Filters rows based on whether they satisfy the where clause.
+ */
+function filterRows(
+  rows: Record<string, RowData>,
+  columns: Record<string, Column>,
+  where: WhereClause,
+) {
   const filteredRows: Record<string, RowData> = {};
+  const column = columns[where.column];
+
+  if (!column) {
+    throw new Error(`Column ${where.column} is not defined.`);
+  }
 
   for (const [primaryKey, rowData] of Object.entries(rows)) {
-    if (
-      evaluateExpression(rowData[where.column], where.value, where.operator)
-    ) {
+    const rawFieldValue = rowData[where.column];
+
+    if (rawFieldValue === undefined) {
+      throw new Error(`Row is missing field: ${where.column}`);
+    }
+
+    const formattedFieldValue = getJsValueFromDataset(
+      rawFieldValue,
+      column.type,
+    );
+
+    if (evaluateExpression(formattedFieldValue, where.value, where.operator)) {
       filteredRows[primaryKey] = rowData;
     }
   }
@@ -74,9 +106,31 @@ function filterRows(rows: Record<string, RowData>, where: WhereClause) {
   return filteredRows;
 }
 
+function getJsValueFromDataset(value: string | null, type: DatasetDataType) {
+  if (value === null) {
+    return null;
+  }
+
+  if (type === "text") {
+    return value;
+  }
+
+  if (type === "number") {
+    return Number(value);
+  }
+
+  if (type === "boolean") {
+    if (value === "true") return true;
+    if (value === "false") return false;
+    throw new Error(`Invalid boolean value: ${value}`);
+  }
+
+  return null;
+}
+
 function evaluateExpression(
-  left: DatasetDataType,
-  right: DatasetDataType,
+  left: DatasetValueType,
+  right: DatasetValueType,
   operator: ColumnRelationalOperator,
 ): boolean {
   switch (operator) {

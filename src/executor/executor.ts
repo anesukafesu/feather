@@ -4,6 +4,7 @@ import type { Dataset } from "@contracts/dataset.js";
 import { createTable } from "./statement-executors/create-table.js";
 import { listTables } from "./statement-executors/list-tables.js";
 import { insertRow } from "./statement-executors/insert-row.js";
+import { selectRows } from "./statement-executors/select-rows.js";
 
 export type ExecutionSignal =
   | {
@@ -13,7 +14,7 @@ export type ExecutionSignal =
   | {
       type: "DisplayTable";
       header: string;
-      table: DatasetDataType[][];
+      table: (string | null)[][];
     }
   | {
       type: "Info";
@@ -46,6 +47,7 @@ export function executeStatements(program: ProgramAST, dataset: Dataset) {
         executionSignal = insertRow(statement, dataset);
         break;
       case "SelectRowsStatement":
+        executionSignal = selectRows(statement, dataset);
         break;
       case "UpdateRowsStatement":
         break;

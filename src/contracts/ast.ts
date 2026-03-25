@@ -1,4 +1,8 @@
-import type { Column, DatasetDataType } from "@contracts/common.js";
+import type {
+  Column,
+  DatasetDataType,
+  DatasetValueType,
+} from "@contracts/common.js";
 
 export interface ProgramAST {
   statements: Statement[];
@@ -74,7 +78,7 @@ export type TableAlteration = AddColumnAlteration | DropColumnAlteration;
 export interface WhereClause {
   operator: ColumnRelationalOperator;
   column: Identifier;
-  value: DatasetDataType;
+  value: DatasetValueType;
 }
 
 export type ColumnRelationalOperator = "=" | "!=" | ">" | "<" | ">=" | "<=";
