@@ -5,6 +5,7 @@ export type DefaultValueStrategy =
 export type DatasetDataType = "text" | "number" | "boolean" | null;
 
 export interface Column {
+  name: string;
   type: DatasetDataType;
   isUnique: boolean;
   isNullable: boolean;
