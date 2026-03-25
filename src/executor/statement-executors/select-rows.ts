@@ -3,9 +3,9 @@ import {
   Identifier,
   SelectRowsStatement,
   WhereClause,
-} from "../../contracts/ast";
-import { DatasetDataType } from "../../contracts/common";
-import { Dataset, RowData } from "../../contracts/dataset";
+} from "../../../contracts/ast";
+import { DatasetDataType } from "../../../contracts/common";
+import { Dataset, RowData } from "../../../contracts/dataset";
 import { ExecutionSignal } from "../executor";
 
 export function selectRows(

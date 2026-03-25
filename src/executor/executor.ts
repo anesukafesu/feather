@@ -1,6 +1,6 @@
-import { ProgramAST } from "../contracts/ast";
-import { DatasetDataType } from "../contracts/common";
-import { Dataset } from "../contracts/dataset";
+import { ProgramAST } from "../../contracts/ast";
+import { DatasetDataType } from "../../contracts/common";
+import { Dataset } from "../../contracts/dataset";
 import { createTable } from "./statement-executors/create-table";
 import { listTables } from "./statement-executors/list-tables";
 
@@ -40,6 +40,7 @@ export function executeStatements(program: ProgramAST, dataset: Dataset) {
       case "AlterTableStatement":
       case "DropTableStatement":
       case "InsertRowStatement":
+
       case "SelectRowsStatement":
       case "UpdateRowsStatement":
       case "DeleteRowsStatement":

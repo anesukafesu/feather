@@ -1,6 +1,6 @@
-import { AlterTableStatement } from "../../contracts/ast";
-import { Column } from "../../contracts/common";
-import { Dataset } from "../../contracts/dataset";
+import { AlterTableStatement } from "../../../contracts/ast";
+import { Column } from "../../../contracts/common";
+import { Dataset } from "../../../contracts/dataset";
 import { ExecutionSignal } from "../executor";
 
 export function alterTable(statement: AlterTableStatement, dataset: Dataset) {

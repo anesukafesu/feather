@@ -1,6 +1,6 @@
-import { ListTablesStatement } from "../../contracts/ast";
-import { DatasetDataType } from "../../contracts/common";
-import { Dataset } from "../../contracts/dataset";
+import { ListTablesStatement } from "../../../contracts/ast";
+import { DatasetDataType } from "../../../contracts/common";
+import { Dataset } from "../../../contracts/dataset";
 import { ExecutionSignal } from "../executor";
 
 export function listTables(
