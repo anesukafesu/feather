@@ -10,9 +10,9 @@ export function createTable(
 
   // Build indexes
   const indexes: Record<string, Index> = {};
-  for (const [name, column] of Object.entries(statement.columns)) {
-    if (column.isUnique) {
-      indexes[name] = {};
+  for (const column of Object.values(statement.columns)) {
+    if (column.isUnique && statement.primaryKeyColumn !== column.name) {
+      indexes[column.name] = {};
     }
   }
 
