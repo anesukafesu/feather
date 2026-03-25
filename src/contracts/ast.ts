@@ -39,8 +39,12 @@ export interface DropTableStatement {
 export interface InsertRowStatement {
   type: "InsertRowStatement";
   tableName: Identifier;
-  columnNames: Identifier[];
-  values: DatasetDataType[];
+  data: Record<string, Literal>;
+}
+
+export interface Literal {
+  type: DatasetDataType;
+  value: string;
 }
 
 export interface SelectRowsStatement {
