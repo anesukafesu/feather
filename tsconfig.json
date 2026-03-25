@@ -9,6 +9,12 @@
     "module": "nodenext",
     "target": "esnext",
     "types": [],
+
+    "baseUrl": "./src",
+    "paths": {
+      "@contracts/*": ["contracts/*"],
+      "@executor/*": ["executor/*"]
+    },
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],

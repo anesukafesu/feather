@@ -1,4 +1,4 @@
-import { Column, DatasetDataType } from "./common";
+import type { Column, DatasetDataType } from "@contracts/common.js";
 
 export interface Dataset {
   tables: Record<string, Table>;

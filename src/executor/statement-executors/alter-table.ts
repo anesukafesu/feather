@@ -1,7 +1,7 @@
-import { AlterTableStatement } from "../../../contracts/ast";
-import { Column } from "../../../contracts/common";
-import { Dataset } from "../../../contracts/dataset";
-import { ExecutionSignal } from "../executor";
+import type { AlterTableStatement } from "@contracts/ast.js";
+import type { Column } from "@contracts/common.js";
+import type { Dataset } from "@contracts/dataset.js";
+import type { ExecutionSignal } from "@executor/executor.js";
 
 export function alterTable(statement: AlterTableStatement, dataset: Dataset) {
   if (statement.alteration.type === "DropColumn") {

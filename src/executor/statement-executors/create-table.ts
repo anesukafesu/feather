@@ -1,6 +1,6 @@
-import type { CreateTableStatement } from "../../../contracts/ast";
-import type { Dataset, Index, Table } from "../../../contracts/dataset";
-import type { ExecutionSignal } from "../executor";
+import type { CreateTableStatement } from "@contracts/ast.js";
+import type { Dataset, Index, Table } from "@contracts/dataset.js";
+import type { ExecutionSignal } from "@executor/executor.js";
 
 export function createTable(
   statement: CreateTableStatement,

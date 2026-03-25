@@ -1,7 +1,7 @@
-import { ListTablesStatement } from "../../../contracts/ast";
-import { DatasetDataType } from "../../../contracts/common";
-import { Dataset } from "../../../contracts/dataset";
-import { ExecutionSignal } from "../executor";
+import type { ListTablesStatement } from "@contracts/ast.js";
+import type { DatasetDataType } from "@contracts/common.js";
+import type { Dataset } from "@contracts/dataset.js";
+import type { ExecutionSignal } from "@executor/executor.js";
 
 export function listTables(
   _statement: ListTablesStatement,

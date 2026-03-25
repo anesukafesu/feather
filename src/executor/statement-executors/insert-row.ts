@@ -1,6 +1,6 @@
-import { InsertRowStatement } from "../../../contracts/ast";
-import { Dataset } from "../../../contracts/dataset";
-import { ExecutionSignal } from "../executor";
+import type { InsertRowStatement } from "@contracts/ast.js";
+import type { Dataset } from "@contracts/dataset.js";
+import type { ExecutionSignal } from "@executor/executor.js";
 
 export function insertRow(
   statement: InsertRowStatement,

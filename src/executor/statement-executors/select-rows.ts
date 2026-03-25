@@ -1,12 +1,12 @@
-import {
+import type {
   ColumnRelationalOperator,
   Identifier,
   SelectRowsStatement,
   WhereClause,
-} from "../../../contracts/ast";
-import { DatasetDataType } from "../../../contracts/common";
-import { Dataset, RowData } from "../../../contracts/dataset";
-import { ExecutionSignal } from "../executor";
+} from "@contracts/ast.js";
+import type { DatasetDataType } from "@contracts/common.js";
+import type { Dataset, RowData } from "@contracts/dataset.js";
+import type { ExecutionSignal } from "@executor/executor.js";
 
 export function selectRows(
   statement: SelectRowsStatement,
