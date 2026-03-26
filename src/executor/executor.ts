@@ -1,4 +1,4 @@
-import type { ProgramAST } from "@contracts/ast.js";
+import type { ASTProgram } from "@contracts/ast.js";
 import type { Dataset } from "@contracts/dataset.js";
 import { createTable } from "./statement-executors/create-table.js";
 import { listTables } from "./statement-executors/list-tables.js";
@@ -29,7 +29,7 @@ export interface IODevice {
   displayTable(table: string[][], title?: string): void;
 }
 
-export function executeASTProgram(program: ProgramAST, dataset: Dataset) {
+export function executeASTProgram(program: ASTProgram, dataset: Dataset) {
   let executionSignal: ExecutionSignal = { type: "Null" };
 
   for (const statement of program.statements) {
