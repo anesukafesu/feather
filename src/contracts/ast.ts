@@ -98,7 +98,7 @@ export type UpdateOperation = SetOperation;
 export interface SetOperation {
   type: "Set";
   columnName: Identifier;
-  value: DatasetDataType;
+  value: string;
 }
 
 export type Identifier = string;

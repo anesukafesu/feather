@@ -7,6 +7,7 @@ import { selectRows } from "./statement-executors/select-rows.js";
 import { alterTable } from "./statement-executors/alter-table.js";
 import { dropTable } from "./statement-executors/drop-table.js";
 import { deleteRows } from "./statement-executors/delete-rows.js";
+import { updateRows } from "./statement-executors/update-rows.js";
 
 export type ExecutionSignal =
   | {
@@ -54,6 +55,7 @@ export function executeASTProgram(program: ASTProgram, dataset: Dataset) {
         executionSignal = selectRows(statement, dataset);
         break;
       case "UpdateRowsStatement":
+        executionSignal = updateRows(statement, dataset);
         break;
       case "DeleteRowsStatement":
         executionSignal = deleteRows(statement, dataset);
