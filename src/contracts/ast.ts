@@ -67,7 +67,7 @@ export interface SelectRowsStatement {
   type: "SelectRowsStatement";
   tableName: Identifier;
   columnNames: ColumnsSelector;
-  where: WhereClause | undefined;
+  where?: Predicate;
 }
 
 export type ColumnsSelector = "*" | Identifier[];
@@ -76,16 +76,16 @@ export interface UpdateRowsStatement {
   type: "UpdateRowsStatement";
   tableName: Identifier;
   updateOperation: UpdateOperation;
-  where: WhereClause | undefined;
+  where?: Predicate;
 }
 
 export interface DeleteRowsStatement {
   type: "DeleteRowsStatement";
   tableName: Identifier;
-  where: WhereClause | undefined;
+  where?: Predicate;
 }
 
-export interface WhereClause {
+export interface Predicate {
   operator: ColumnRelationalOperator;
   column: Identifier;
   value: DatasetValueType;
