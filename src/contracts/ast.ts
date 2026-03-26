@@ -4,7 +4,7 @@ import type {
   DatasetValueType,
 } from "@contracts/common.js";
 
-export interface ProgramAST {
+export interface ASTProgram {
   statements: Statement[];
 }
 
