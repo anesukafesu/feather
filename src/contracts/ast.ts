@@ -29,10 +29,22 @@ export interface ListTablesStatement {
   type: "ListTablesStatement";
 }
 
-export interface AlterTableStatement {
+export type AlterTableStatement =
+  | AlterTableAddColumnStatement
+  | AlterTableDropColumnStatement;
+
+export interface AlterTableAddColumnStatement {
   type: "AlterTableStatement";
+  variant: "AddColumn";
   tableName: Identifier;
-  alteration: TableAlteration;
+  column: Column;
+}
+
+export interface AlterTableDropColumnStatement {
+  type: "AlterTableStatement";
+  variant: "DropColumn";
+  tableName: Identifier;
+  columnName: Identifier;
 }
 
 export interface DropTableStatement {
@@ -73,8 +85,6 @@ export interface DeleteRowsStatement {
   where: WhereClause | undefined;
 }
 
-export type TableAlteration = AddColumnAlteration | DropColumnAlteration;
-
 export interface WhereClause {
   operator: ColumnRelationalOperator;
   column: Identifier;
@@ -89,17 +99,6 @@ export interface SetOperation {
   type: "Set";
   columnName: Identifier;
   value: DatasetDataType;
-}
-
-export interface AddColumnAlteration {
-  type: "AddColumn";
-  columnName: Identifier;
-  column: Column;
-}
-
-export interface DropColumnAlteration {
-  type: "DropColumn";
-  columnName: Identifier;
 }
 
 export type Identifier = string;

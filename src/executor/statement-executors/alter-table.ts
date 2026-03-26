@@ -1,69 +1,89 @@
-import type { AlterTableStatement } from "@contracts/ast.js";
-import type { Column } from "@contracts/common.js";
+import type {
+  AlterTableAddColumnStatement,
+  AlterTableDropColumnStatement,
+  AlterTableStatement,
+} from "@contracts/ast.js";
 import type { Dataset } from "@contracts/dataset.js";
 import type { ExecutionSignal } from "@executor/executor.js";
 
-export function alterTable(statement: AlterTableStatement, dataset: Dataset) {
-  if (statement.alteration.type === "DropColumn") {
-    return dropColumn(
-      statement.tableName,
-      statement.alteration.columnName,
-      dataset,
-    );
+export function alterTable(
+  statement: AlterTableStatement,
+  dataset: Dataset,
+): ExecutionSignal {
+  if (statement.variant === "DropColumn") {
+    return dropColumn(statement, dataset);
   } else {
-    addColumn(
-      statement.tableName,
-      statement.alteration.columnName,
-      statement.alteration.column,
-      dataset,
-    );
+    return addColumn(statement, dataset);
   }
 }
 
 function dropColumn(
-  tableName: string,
-  columnName: string,
+  statement: AlterTableDropColumnStatement,
   dataset: Dataset,
 ): ExecutionSignal {
-  if (columnName === dataset.tables[tableName].primaryKeyColumn) {
+  const table = dataset.tables[statement.tableName];
+
+  if (table === undefined) {
+    return {
+      type: "Error",
+      message: `Table ${statement.tableName} does not exist in the database.`,
+    };
+  }
+
+  if (statement.columnName === table.primaryKeyColumn) {
     return { type: "Error", message: "Cannot drop primary key column." };
   }
 
-  delete dataset.tables[tableName].columns[columnName];
+  delete table.columns[statement.columnName];
 
-  for (const rowData of Object.values(dataset.tables[tableName].rows)) {
-    delete rowData[columnName];
+  for (const rowData of Object.values(table.rows)) {
+    delete rowData[statement.columnName];
   }
 
-  return { type: "Null" };
+  return {
+    type: "Info",
+    message: `Dropped column ${statement.columnName} from table ${statement.tableName}.`,
+  };
 }
 
 function addColumn(
-  tableName: string,
-  columnName: string,
-  column: Column,
+  statement: AlterTableAddColumnStatement,
   dataset: Dataset,
-) {
-  const nRows = Object.keys(dataset.tables[tableName].rows).length;
+): ExecutionSignal {
+  const table = dataset.tables[statement.tableName];
 
-  if (nRows > 0 && !column.isNullable) {
+  if (table === undefined) {
+    return {
+      type: "Error",
+      message: `Table ${statement.tableName} does not exist in database.`,
+    };
+  }
+
+  const numberOfExistingRows = Object.keys(table.rows).length;
+
+  if (numberOfExistingRows > 0 && !statement.column.isNullable) {
     return {
       type: "Error",
       message: "Cannot add non-nullable column to a table with existing rows.",
     };
   }
 
-  if (nRows > 1 && column.isUnique) {
+  if (numberOfExistingRows > 1 && statement.column.isUnique) {
     return {
       type: "Error",
       message:
-        "Cannot add column with unique constraint if the dataset has more than one row.",
+        "Cannot add column with unique constraint if the table has more than one existing row.",
     };
   }
 
-  dataset.tables[tableName].columns[columnName] = column;
+  table.columns[statement.column.name] = statement.column;
 
-  for (const rowData of Object.values(dataset.tables[tableName].rows)) {
-    rowData[columnName] = null;
+  for (const rowData of Object.values(table.rows)) {
+    rowData[statement.column.name] = null;
   }
+
+  return {
+    type: "Info",
+    message: `Added column ${statement.column.name} to table ${statement.tableName}.`,
+  };
 }
