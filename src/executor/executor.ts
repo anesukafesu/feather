@@ -5,6 +5,7 @@ import { listTables } from "./statement-executors/list-tables.js";
 import { insertRow } from "./statement-executors/insert-row.js";
 import { selectRows } from "./statement-executors/select-rows.js";
 import { alterTable } from "./statement-executors/alter-table.js";
+import { dropTable } from "./statement-executors/drop-table.js";
 
 export type ExecutionSignal =
   | {
@@ -43,6 +44,7 @@ export function executeASTProgram(program: ProgramAST, dataset: Dataset) {
         executionSignal = alterTable(statement, dataset);
         break;
       case "DropTableStatement":
+        executionSignal = dropTable(statement, dataset);
         break;
       case "InsertRowStatement":
         executionSignal = insertRow(statement, dataset);
