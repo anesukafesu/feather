@@ -1,16 +1,7 @@
-import type {
-  Operator,
-  Identifier,
-  SelectRowsStatement,
-  Predicate,
-} from "@contracts/ast.js";
-import type {
-  Column,
-  DatasetDataType,
-  DatasetValueType,
-} from "@contracts/common.js";
-import type { Dataset, RowData } from "@contracts/dataset.js";
+import type { SelectRowsStatement } from "@contracts/ast.js";
+import type { Dataset } from "@contracts/dataset.js";
 import type { ExecutionSignal } from "@executor/executor.js";
+import { getPrimaryKeysOfRowsThatSatisfyPredicate } from "./utils/get-primary-keys-of-rows-that-satisfy-predicate.js";
 
 export function selectRows(
   statement: SelectRowsStatement,
@@ -19,6 +10,8 @@ export function selectRows(
   const tableName = statement.tableName;
   const table = dataset.tables[tableName];
 
+  const results = [];
+
   if (!table) {
     return {
       type: "Error",
@@ -26,150 +19,35 @@ export function selectRows(
     };
   }
 
-  // Filter the rows that meet the condition.
-  let filteredRows = statement.where
-    ? filterRows(table.rows, table.columns, statement.where)
-    : table.rows;
+  // If a where clause exists, we only get the rows that satisfy the predicate.
+  let primaryKeysOfRowsThatSatisfyPredicate = statement.where
+    ? getPrimaryKeysOfRowsThatSatisfyPredicate(
+        table.rows,
+        table.columns,
+        statement.where,
+      )
+    : Object.keys(table.rows);
 
-  // Get the columns that the user requested only.
-  const filteredRowsAndColumns =
-    statement.columnNames === "*"
-      ? filteredRows
-      : filterColumns(filteredRows, statement.columnNames);
+  let columnNames = statement.columnNames;
 
-  // Format them for displaying
-  const formattedFilteredRowsAndColumns = Object.values(
-    filteredRowsAndColumns,
-  ).map((rowData: RowData) => Object.values(rowData));
+  if (columnNames === "*") {
+    columnNames = Object.keys(table.columns);
+  }
+
+  for (const primaryKey of primaryKeysOfRowsThatSatisfyPredicate) {
+    const rowToDisplay = [];
+    const row = table.rows[primaryKey]!;
+
+    for (const columnName of columnNames) {
+      rowToDisplay.push(row[columnName]!);
+    }
+
+    results.push(rowToDisplay);
+  }
 
   return {
     type: "DisplayTable",
     header: tableName,
-    table: formattedFilteredRowsAndColumns,
+    table: results,
   };
-}
-
-function filterColumns(
-  rows: Record<string, RowData>,
-  columnNames: Identifier[],
-) {
-  const rowsWithSelectedColumns: Record<string, RowData> = {};
-  const columnNamesLookup = new Set(columnNames);
-
-  for (const [primaryKey, rowData] of Object.entries(rows)) {
-    const filteredRow: RowData = {};
-
-    for (const [columnName, value] of Object.entries(rowData)) {
-      if (columnNamesLookup.has(columnName)) {
-        filteredRow[columnName] = value;
-      }
-    }
-
-    rowsWithSelectedColumns[primaryKey] = filteredRow;
-  }
-
-  return rowsWithSelectedColumns;
-}
-
-/**
- * Filters rows based on whether they satisfy the where clause.
- */
-function filterRows(
-  rows: Record<string, RowData>,
-  columns: Record<string, Column>,
-  where: Predicate,
-) {
-  const filteredRows: Record<string, RowData> = {};
-  const column = columns[where.columnName];
-
-  if (!column) {
-    throw new Error(`Column ${where.columnName} is not defined.`);
-  }
-
-  for (const [primaryKey, rowData] of Object.entries(rows)) {
-    const rawFieldValue = rowData[where.columnName];
-
-    if (rawFieldValue === undefined) {
-      throw new Error(`Row is missing field: ${where.columnName}`);
-    }
-
-    const formattedFieldValue = getJsValueFromDataset(
-      rawFieldValue,
-      column.type,
-    );
-
-    if (evaluateExpression(formattedFieldValue, where.value, where.operator)) {
-      filteredRows[primaryKey] = rowData;
-    }
-  }
-
-  return filteredRows;
-}
-
-function getJsValueFromDataset(value: string | null, type: DatasetDataType) {
-  if (value === null) {
-    return null;
-  }
-
-  if (type === "text") {
-    return value;
-  }
-
-  if (type === "number") {
-    return Number(value);
-  }
-
-  if (type === "boolean") {
-    if (value === "true") return true;
-    if (value === "false") return false;
-    throw new Error(`Invalid boolean value: ${value}`);
-  }
-
-  return null;
-}
-
-function evaluateExpression(
-  left: DatasetValueType,
-  right: DatasetValueType,
-  operator: Operator,
-): boolean {
-  switch (operator) {
-    case "=": {
-      return left === right;
-    }
-
-    case "!=": {
-      return left !== right;
-    }
-
-    case "<": {
-      ensureOperandsAreNotNull(left, right, operator);
-      return left! < right!;
-    }
-
-    case ">": {
-      ensureOperandsAreNotNull(left, right, operator);
-      return left! > right!;
-    }
-
-    case "<=": {
-      ensureOperandsAreNotNull(left, right, operator);
-      return left! <= right!;
-    }
-
-    case ">=": {
-      ensureOperandsAreNotNull(left, right, operator);
-      return left! >= right!;
-    }
-  }
-}
-
-function ensureOperandsAreNotNull(left: any, right: any, operator: string) {
-  if (left === null) {
-    throw new Error(`Left-hand side of '${operator}' operator is null.`);
-  }
-
-  if (right === null) {
-    throw new Error(`Right hand side of '${operator}' operator is null.`);
-  }
 }
