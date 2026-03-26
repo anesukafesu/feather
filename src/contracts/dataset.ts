@@ -11,6 +11,6 @@ export interface Table {
   rows: Record<string, RowData>;
 }
 
-export type Index = Record<number | string, number | string>;
+export type Index = Record<string, string>;
 
 export type RowData = Record<string, string | null>;
