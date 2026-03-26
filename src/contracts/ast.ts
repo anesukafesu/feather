@@ -86,12 +86,12 @@ export interface DeleteRowsStatement {
 }
 
 export interface Predicate {
-  operator: ColumnRelationalOperator;
-  column: Identifier;
+  operator: Operator;
+  columnName: Identifier;
   value: DatasetValueType;
 }
 
-export type ColumnRelationalOperator = "=" | "!=" | ">" | "<" | ">=" | "<=";
+export type Operator = "=" | "!=" | ">" | "<" | ">=" | "<=";
 
 export type UpdateOperation = SetOperation;
 
