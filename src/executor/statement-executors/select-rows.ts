@@ -1,8 +1,8 @@
 import type {
-  ColumnRelationalOperator,
+  Operator,
   Identifier,
   SelectRowsStatement,
-  WhereClause,
+  Predicate,
 } from "@contracts/ast.js";
 import type {
   Column,
@@ -77,20 +77,20 @@ function filterColumns(
 function filterRows(
   rows: Record<string, RowData>,
   columns: Record<string, Column>,
-  where: WhereClause,
+  where: Predicate,
 ) {
   const filteredRows: Record<string, RowData> = {};
-  const column = columns[where.column];
+  const column = columns[where.columnName];
 
   if (!column) {
-    throw new Error(`Column ${where.column} is not defined.`);
+    throw new Error(`Column ${where.columnName} is not defined.`);
   }
 
   for (const [primaryKey, rowData] of Object.entries(rows)) {
-    const rawFieldValue = rowData[where.column];
+    const rawFieldValue = rowData[where.columnName];
 
     if (rawFieldValue === undefined) {
-      throw new Error(`Row is missing field: ${where.column}`);
+      throw new Error(`Row is missing field: ${where.columnName}`);
     }
 
     const formattedFieldValue = getJsValueFromDataset(
@@ -131,7 +131,7 @@ function getJsValueFromDataset(value: string | null, type: DatasetDataType) {
 function evaluateExpression(
   left: DatasetValueType,
   right: DatasetValueType,
-  operator: ColumnRelationalOperator,
+  operator: Operator,
 ): boolean {
   switch (operator) {
     case "=": {
