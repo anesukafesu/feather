@@ -28,7 +28,7 @@ export interface IODevice {
   displayTable(table: string[][], title?: string): void;
 }
 
-export function executeStatements(program: ProgramAST, dataset: Dataset) {
+export function executeASTProgram(program: ProgramAST, dataset: Dataset) {
   let executionSignal: ExecutionSignal = { type: "Null" };
 
   for (const statement of program.statements) {
