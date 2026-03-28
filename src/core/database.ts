@@ -7,7 +7,7 @@ export class Database {
     this.tables = {};
   }
 
-  createTable(tableName: string, table: Table) {
+  addTable(tableName: string, table: Table) {
     const existingTable = this.tables[tableName];
 
     if (existingTable) {
