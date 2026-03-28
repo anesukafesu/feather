@@ -8,6 +8,12 @@ export class Database {
   }
 
   createTable(tableName: string, table: Table) {
+    const existingTable = this.tables[tableName];
+
+    if (existingTable) {
+      throw new Error(`Table with name ${tableName} already exists.`);
+    }
+
     this.tables[tableName] = table;
   }
 
