@@ -2,7 +2,7 @@ import type { Column } from "./column.js";
 import { ColumnContainer } from "./column-container.js";
 import { RowContainer } from "./rows-container.js";
 import { IndexContainer } from "./index-container.js";
-import type { Row } from "./row.js";
+import type { FieldValue, Row } from "./row.js";
 import type { UpdateFn, Predicate } from "core/rows-container.js";
 import { Index } from "./index.js";
 
@@ -45,6 +45,11 @@ export class Table {
     );
   }
 
+  deleteRows(condition: RowCondition) {
+    const primaryKeys =
+      this.rowContainer.getRowPrimaryKeysThatMeetCondition(condition);
+  }
+
   ensureRowFieldsAreUnique() {}
 
   getIndexes() {
@@ -58,4 +63,14 @@ export class Table {
   getRows() {
     return this.rowContainer.getRows();
   }
+}
+
+export interface RelationalOperators {
+  type: "=" | "!=";
+}
+
+export interface RowCondition {
+  columnName: string;
+  value: FieldValue;
+  relation: RelationalOperators;
 }
